@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Shield } from 'lucide-react';
+import { BookOpen, FacebookIcon, Folder, LayoutGrid, Shield, Users, Settings } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -13,23 +13,31 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+];
+
+const footerNavItemsSettings: NavItem[] = [
     {
-        title: 'Roles & Permissions',
-        href: '/roles',
-        icon: Shield,
+        title: 'Users',
+        href: '/users',
+        icon: Users,
     },
     {
         title: 'MFA Settings',
         href: '/settings/mfa',
         icon: Shield,
     },
+    {
+        title: 'Roles & Permissions',
+        href: '/roles',
+        icon: Shield,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
+        title: 'Facebook',
+        href: 'https://www.facebook.com/p/Office-of-the-Senior-Citizens-Affairs-LGU-iligan-61562896852421/',
+        icon: FacebookIcon,
     },
     {
         title: 'Documentation',
@@ -56,11 +64,14 @@ export function AppSidebar() {
             <SidebarContent>
                 <NavMain items={mainNavItems} />
             </SidebarContent>
-
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                <NavFooter items={footerNavItemsSettings} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
+            {/* <SidebarFooter>
+                <NavFooter items={footerNavItems} className="mt-auto" />
+                <NavUser />
+            </SidebarFooter> */}
         </Sidebar>
     );
 }

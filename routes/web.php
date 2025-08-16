@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -25,6 +26,12 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
              ->name('permissions.create');
         Route::post('permissions', [PermissionController::class, 'store'])
              ->name('permissions.store');
+     Route::get('users/index', [UserController::class, 'index'])
+             ->name('users.index');
+        Route::get('users/create', [UserController::class, 'create'])
+             ->name('users.create');
+        Route::post('users',       [UserController::class, 'store'])
+             ->name('users.store');
     });
 
     // View (index + show)
@@ -37,6 +44,10 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
              ->name('permissions.index');
         Route::get('permissions/{permission}', [PermissionController::class, 'show'])
              ->name('permissions.show');
+        Route::get('users',         [UserController::class, 'index'])
+             ->name('users.index');
+        Route::get('users/{user}',  [UserController::class, 'show'])
+             ->name('users.show');
     });
 
     // Edit & Update
@@ -49,6 +60,10 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
              ->name('permissions.edit');
         Route::match(['put','patch'],'permissions/{permission}', [PermissionController::class, 'update'])
              ->name('permissions.update');
+        Route::get('users/{user}/edit', [UserController::class, 'edit'])
+             ->name('users.edit');
+        Route::match(['put','patch'],'users/{user}', [UserController::class, 'update'])
+             ->name('users.update');
     });
 
     // Delete (with MFA protection for sensitive actions)
@@ -60,6 +75,11 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
     Route::middleware(['permission:users.delete', 'mfa:delete_permission'])->group(function () {
         Route::delete('permissions/{permission}', [PermissionController::class, 'destroy'])
              ->name('permissions.destroy');
+    });
+    
+    Route::middleware(['permission:users.delete', 'mfa:delete_user'])->group(function () {
+        Route::delete('users/{user}', [UserController::class, 'destroy'])
+             ->name('users.destroy');
     });
 
 });

@@ -334,7 +334,7 @@ class MfaService
     /**
      * Get OTP statistics for monitoring.
      */
-    public function getOtpStats(User $user = null): array
+    public function getOtpStats(?User $user = null)
     {
         $query = UserOtpCode::query();
         

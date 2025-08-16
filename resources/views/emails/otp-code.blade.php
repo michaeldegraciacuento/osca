@@ -80,7 +80,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">🚗 Car ERP</div>
+            <div class="logo">Office for the Senior Citizens Affairs - Iligan City</div>
             <h1>Security Verification Required</h1>
         </div>
 
@@ -123,7 +123,7 @@
         </ul>
 
         <div class="footer">
-            <p><strong>Car ERP Security Team</strong></p>
+            <p><strong>OSCA Security Team</strong></p>
             <p>This is an automated security message. Please do not reply to this email.</p>
             <p style="font-size: 12px; margin-top: 15px;">
                 Request Details:<br>
