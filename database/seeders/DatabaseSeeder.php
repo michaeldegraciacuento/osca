@@ -21,28 +21,29 @@ class DatabaseSeeder extends Seeder
             'name' => 'Michael Cuento',
             'email' => 'amfufu.michael@gmail.com',
             'password' => 'password',
+            'mfa_enabled' => '1',
         ]);
         $admin->assignRole('admin');
 
-        $serviceManager = User::factory()->create([
-            'name' => 'Service Manager',
-            'email' => 'service@example.com',
-            'password' => 'password',
-        ]);
-        $serviceManager->assignRole('service_manager');
+        // $serviceManager = User::factory()->create([
+        //     'name' => 'Service Manager',
+        //     'email' => 'service@example.com',
+        //     'password' => 'password',
+        // ]);
+        // $serviceManager->assignRole('service_manager');
 
-        $salesRep = User::factory()->create([
-            'name' => 'Sales Rep',
-            'email' => 'sales@example.com',
-            'password' => 'password',
-        ]);
-        $salesRep->assignRole('sales_rep');
+        // $salesRep = User::factory()->create([
+        //     'name' => 'Sales Rep',
+        //     'email' => 'sales@example.com',
+        //     'password' => 'password',
+        // ]);
+        // $salesRep->assignRole('sales_rep');
 
-        $technician = User::factory()->create([
-            'name' => 'Technician',
-            'email' => 'tech@example.com',
-            'password' => 'password',
-        ]);
-        $technician->assignRole('technician');
+        // $technician = User::factory()->create([
+        //     'name' => 'Technician',
+        //     'email' => 'tech@example.com',
+        //     'password' => 'password',
+        // ]);
+        // $technician->assignRole('technician');
     }
 }

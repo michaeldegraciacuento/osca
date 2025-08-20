@@ -22,6 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'mfa_enabled',
+        'mfa_secret',
+        'mfa_recovery_codes',
     ];
 
     /**
@@ -39,11 +42,10 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'mfa_enabled' => 'boolean',
+        'mfa_recovery_codes' => 'array',
+    ];
 }

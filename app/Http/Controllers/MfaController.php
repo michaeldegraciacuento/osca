@@ -19,6 +19,13 @@ class MfaController extends Controller
      */
     public function show(Request $request): Response
     {
+        $user = Auth::user();
+        
+        // If user doesn't have MFA enabled, redirect to dashboard
+        if (!$user || !$user->mfa_enabled) {
+            return redirect('/dashboard');
+        }
+
         $action = $request->session()->get('mfa_intended_action');
         $purpose = $action ? MfaService::PURPOSE_SENSITIVE_ACTION : MfaService::PURPOSE_LOGIN;
 
@@ -36,6 +43,16 @@ class MfaController extends Controller
     public function sendCode(Request $request)
     {
         $user = Auth::user();
+        
+        // Skip if user doesn't have MFA enabled
+        if (!$user->mfa_enabled) {
+            return response()->json([
+                'success' => true,
+                'message' => 'MFA not required for this user.',
+                'redirect_url' => '/dashboard',
+            ]);
+        }
+
         $action = $request->input('action');
         $purpose = $request->input('purpose', MfaService::PURPOSE_LOGIN);
 
@@ -82,6 +99,16 @@ class MfaController extends Controller
         ]);
 
         $user = Auth::user();
+        
+        // Skip MFA verification if user doesn't have MFA enabled
+        if (!$user->mfa_enabled) {
+            return response()->json([
+                'success' => true,
+                'message' => 'MFA not required for this user.',
+                'redirect_url' => '/dashboard',
+            ]);
+        }
+        
         $code = $request->input('code');
         $purpose = $request->input('purpose');
         $action = $request->input('action');

@@ -178,9 +178,8 @@ class MfaService
      */
     public function requiresMfaForLogin(User $user): bool
     {
-        // For now, require MFA for all users
-        // Later, this can be configurable per user or role
-        return true;
+        // Check if user has MFA enabled
+        return (bool) $user->mfa_enabled;
     }
 
     /**
@@ -188,6 +187,11 @@ class MfaService
      */
     public function requiresMfaForAction(string $action, User $user): bool
     {
+        // If user doesn't have MFA enabled, skip all MFA checks
+        if (!$user->mfa_enabled) {
+            return false;
+        }
+
         $sensitiveActions = [
             'delete_role',
             'delete_permission',

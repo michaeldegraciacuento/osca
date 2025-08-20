@@ -26,9 +26,7 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
              ->name('permissions.create');
         Route::post('permissions', [PermissionController::class, 'store'])
              ->name('permissions.store');
-     Route::get('users/index', [UserController::class, 'index'])
-             ->name('users.index');
-        Route::get('users/create', [UserController::class, 'create'])
+     Route::get('users/create', [UserController::class, 'create'])
              ->name('users.create');
         Route::post('users',       [UserController::class, 'store'])
              ->name('users.store');
@@ -64,6 +62,12 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
              ->name('users.edit');
         Route::match(['put','patch'],'users/{user}', [UserController::class, 'update'])
              ->name('users.update');
+
+        // MFA Management for Users
+        Route::post('users/{user}/enable-mfa', [UserController::class, 'enableMfa'])
+             ->name('users.enable-mfa');
+        Route::post('users/{user}/disable-mfa', [UserController::class, 'disableMfa'])
+             ->name('users.disable-mfa');
     });
 
     // Delete (with MFA protection for sensitive actions)
@@ -85,5 +89,7 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
 });
 
 require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/mfa.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/mfa.php';

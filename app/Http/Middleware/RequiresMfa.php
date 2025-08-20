@@ -26,6 +26,11 @@ class RequiresMfa
             return redirect()->route('login');
         }
 
+        // Skip MFA if user doesn't have MFA enabled
+        if (!$user->mfa_enabled) {
+            return $next($request);
+        }
+
         // Check if MFA is required for this action
         if ($action && !$this->mfaService->requiresMfaForAction($action, $user)) {
             return $next($request);

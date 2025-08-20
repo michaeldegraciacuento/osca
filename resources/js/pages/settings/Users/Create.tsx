@@ -86,7 +86,7 @@ export default function Create({ roles }: Props) {
                                         type="text"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        error={errors.name}
+                                        className={errors.name ? 'border-destructive' : ''}
                                     />
                                     {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
                                 </div>
@@ -98,7 +98,7 @@ export default function Create({ roles }: Props) {
                                         type="email"
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
-                                        error={errors.email}
+                                        className={errors.email ? 'border-destructive' : ''}
                                     />
                                     {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
                                 </div>
@@ -110,7 +110,7 @@ export default function Create({ roles }: Props) {
                                         type="password"
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
-                                        error={errors.password}
+                                        className={errors.password ? 'border-destructive' : ''}
                                     />
                                     {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
                                 </div>

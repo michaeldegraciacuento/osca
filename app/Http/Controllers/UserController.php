@@ -13,7 +13,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('roles')->paginate(10);
+        $users = User::with('roles')
+            ->select(['id', 'name', 'email', 'created_at', 'mfa_enabled'])
+            ->paginate(10);
         
         return Inertia::render('settings/Users/Index', [
             'users' => $users,
@@ -67,7 +69,7 @@ class UserController extends Controller
         $roles = Role::all();
         
         return Inertia::render('settings/Users/Edit', [
-            'user' => $user,
+            'user' => $user->makeVisible(['mfa_enabled']),
             'roles' => $roles,
         ]);
     }
@@ -99,5 +101,42 @@ class UserController extends Controller
         
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully.');
+    }
+
+    public function toggleMfa(User $user)
+    {
+        $newMfaStatus = !$user->mfa_enabled;
+        
+        $user->update([
+            'mfa_enabled' => $newMfaStatus,
+            // If disabling MFA, clear MFA-related data
+            'mfa_secret' => $newMfaStatus ? $user->mfa_secret : null,
+            'mfa_recovery_codes' => $newMfaStatus ? $user->mfa_recovery_codes : null,
+        ]);
+
+        $statusText = $newMfaStatus ? 'enabled' : 'disabled';
+        
+        return redirect()->back()
+            ->with('success', "Multi-Factor Authentication {$statusText} for {$user->name}.");
+    }
+
+    public function enableMfa(User $user)
+    {
+        $user->update(['mfa_enabled' => 1]);
+        
+        return redirect()->back()
+            ->with('success', 'Multi-Factor Authentication enabled for ' . $user->name . '. Email verification will now be required.');
+    }
+
+    public function disableMfa(User $user)
+    {
+        $user->update([
+            'mfa_enabled' => 0,
+            'mfa_secret' => null,
+            'mfa_recovery_codes' => null
+        ]);
+        
+        return redirect()->back()
+            ->with('success', 'Multi-Factor Authentication disabled for ' . $user->name . '. Email verification is no longer required.');
     }
 }
