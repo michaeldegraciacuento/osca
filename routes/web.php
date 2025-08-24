@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SeniorCitizenController; // Add this line
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\RoleController;
@@ -87,6 +90,13 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
     });
 
 });
+
+// Senior Citizen Registration Routes
+Route::get('/senior-citizen/register', function () {
+    return Inertia::render('website/SeniorCitizenRegistration');
+})->name('senior-citizen.register');
+
+Route::post('/senior-citizen/register', [SeniorCitizenController::class, 'store'])->name('senior-citizen.store');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

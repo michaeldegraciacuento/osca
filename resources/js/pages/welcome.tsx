@@ -77,7 +77,7 @@ export default function Welcome() {
                                     ) : (
                                         <div className="flex space-x-4 pt-2">
                                             <Link href={route('login')} className="text-gray-700">Login</Link>
-                                            <Link href={route('register')} className="text-blue-600 font-medium">Register</Link>
+                                            {/* <Link href={route('register')} className="text-blue-600 font-medium">Register</Link> */}
                                         </div>
                                     )}
                                 </div>
@@ -90,7 +90,7 @@ export default function Welcome() {
                         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh] -mt-16">
                             <div className="text-center lg:text-left">
                                 <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                                    Office of the
+                                    Office for the
                                     <span className="text-blue-600"> Senior Citizen's Affairs</span>
                                 </h1>
                                 <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -112,6 +112,98 @@ export default function Welcome() {
                                 }}
                             >
                             </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="services" className="py-20 bg-gray-50 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-10">
+                        <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 100 100">
+                            <defs>
+                                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#3B82F6" strokeWidth="0.5" />
+                                </pattern>
+                            </defs>
+                            <rect width="100" height="100" fill="url(#grid)" />
+                        </svg>
+                    </div>
+
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+                            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                                Comprehensive programs and services designed to support the health, well-being, and quality of life of our senior citizens.
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl border-2 border-blue-200 hover:shadow-lg transition-all transform hover:-translate-y-2 group hover:border-blue-300">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-15 h-10 bg-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-blue-900">Register as a Senior Citizen</h3>
+                                </div>
+                                <Link
+                                    href="/senior-citizen/register"
+                                    className="w-full px-6 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold text-sm group-hover:shadow-lg block text-center"
+                                >
+                                    Start Registration
+                                </Link>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl border-2 border-green-200 hover:shadow-lg transition-all transform hover:-translate-y-2 group hover:border-green-300">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-11 h-10 bg-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-green-900 ">Apply for Benefits</h3>
+                                </div>
+                                <button className="w-full mt-4 px-6 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-bold text-sm group-hover:shadow-lg">
+                                    Apply Now
+                                </button>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-xl border-2 border-orange-200 hover:shadow-lg transition-all transform hover:-translate-y-2 group hover:border-orange-300">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-15 h-11 bg-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-base font-bold text-orange-900">Check Application Status</h3>
+                                </div>
+                                <button className="w-full mt-1 px-6 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all font-bold text-sm group-hover:shadow-lg">
+                                    Check Status
+                                </button>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl border-2 border-purple-200 hover:shadow-lg transition-all transform hover:-translate-y-2 group hover:border-purple-300">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-14 h-11 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-base font-bold text-purple-900">Request Home Visit</h3>
+                                </div>
+                                <button className="w-full px-6 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all font-bold text-sm group-hover:shadow-lg">
+                                    Request Visit
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="text-center mt-12">
+                            <p className="text-gray-600 mb-4 text-lg">Need help with any of these services?</p>
+                            <a href="#contact" className="inline-flex items-center px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-bold text-lg">
+                                <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                                Contact Our Support Team
+                            </a>
                         </div>
                     </div>
                 </section>
@@ -171,165 +263,6 @@ export default function Welcome() {
                         </div>
                     </div>
                 </section>
-                <section id="services" className="py-20 bg-gray-50 relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10">
-                        <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 100 100">
-                            <defs>
-                                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#3B82F6" strokeWidth="0.5" />
-                                </pattern>
-                            </defs>
-                            <rect width="100" height="100" fill="url(#grid)" />
-                        </svg>
-                    </div>
-
-                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
-                            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                                Comprehensive programs and services designed to support the health, well-being, and quality of life of our senior citizens.
-                            </p>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {[
-                                {
-                                    title: "Healthcare Services",
-                                    description: "Regular health check-ups, medical consultations, and health monitoring programs for senior citizens.",
-                                    icon: "M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z"
-                                },
-                                {
-                                    title: "Social Activities",
-                                    description: "Organized recreational activities, social gatherings, and community events to promote active aging.",
-                                    icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                },
-                                {
-                                    title: "Financial Assistance",
-                                    description: "Support programs including pension assistance, benefits processing, and financial counseling.",
-                                    icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                },
-                                {
-                                    title: "Transportation Services",
-                                    description: "Safe and accessible transportation for medical appointments and essential errands.",
-                                    icon: "M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-                                },
-                                {
-                                    title: "Educational Programs",
-                                    description: "Learning opportunities including health education, skills training, and digital literacy programs.",
-                                    icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                                },
-                                {
-                                    title: "Counseling Support",
-                                    description: "Professional counseling services for emotional support, grief counseling, and mental health care.",
-                                    icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                                }
-                            ].map((service, index) => (
-                                <div key={index} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-all transform hover:-translate-y-2 border border-gray-100">
-                                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-                                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={service.icon} />
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3">{service.title}</h3>
-                                    <p className="text-gray-600">{service.description}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-                <section id="contact" className="py-20 bg-white relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-5">
-                        <svg className="absolute bottom-0 left-0 w-full h-64" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="#3B82F6"></path>
-                        </svg>
-                    </div>
-
-                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
-                            <p className="text-xl text-gray-600">
-                                Get in touch with us for inquiries, assistance, or to learn more about our services.
-                            </p>
-                        </div>
-
-                        <div className="grid lg:grid-cols-2 gap-12">
-                            <div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
-                                <div className="space-y-6">
-                                    <div className="flex items-start">
-                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
-                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900">Address</h4>
-                                            <p className="text-gray-600">Iligan City Hall Complex<br />Iligan City, Lanao del Norte<br />Philippines 9200</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start">
-                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
-                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900">Phone</h4>
-                                            <p className="text-gray-600 dark:text-gray-300">(063) 221-1234<br />Local 456</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start">
-                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
-                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900">Email</h4>
-                                            <p className="text-gray-600 dark:text-gray-300">osca@iligancity.gov.ph<br />info.osca@gmail.com</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start">
-                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
-                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h4 className="font-semibold text-gray-900">Office Hours</h4>
-                                            <p className="text-gray-600 dark:text-gray-300">Monday - Friday: 8:00 AM - 5:00 PM<br />Saturday: 8:00 AM - 12:00 PM</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-gray-50 p-8 rounded-xl border border-gray-100">
-                                <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
-                                <form className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                                        <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                        <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                        <textarea rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"></textarea>
-                                    </div>
-                                    <button type="submit" className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg font-medium">
-                                        Send Message
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </section>
                 <section id="blog" className="py-20 bg-gray-50 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-5">
                         <div className="absolute top-20 left-20 w-8 h-8 transform rotate-45 bg-blue-600"></div>
@@ -381,6 +314,222 @@ export default function Welcome() {
                                     </div>
                                 </article>
                             ))}
+                        </div>
+                    </div>
+                </section>
+                <section id="contact" className="py-20 bg-white relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-5">
+                        <svg className="absolute bottom-0 left-0 w-full h-64" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="#3B82F6"></path>
+                        </svg>
+                    </div>
+
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
+                            <p className="text-xl text-gray-600">
+                                Get in touch with us for inquiries, assistance, or to learn more about our services.
+                            </p>
+                        </div>
+
+                        <div className="grid lg:grid-cols-2 gap-12">
+                            <div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
+                                <div className="space-y-6">
+                                    <div className="flex items-start">
+                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-gray-900">Address</h4>
+                                            <p className="text-gray-600">Iligan City Hall Complex<br />Iligan City, Lanao del Norte<br />Philippines 9200</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start">
+                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-gray-900">Phone</h4>
+                                            <p className="text-gray-600 text-gray-300">(063) 221-1234<br />Local 456</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start">
+                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-gray-900">Email</h4>
+                                            <p className="text-gray-600 text-gray-300">osca@iligancity.gov.ph<br />info.osca@gmail.com</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start">
+                                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold text-gray-900">Office Hours</h4>
+                                            <p className="text-gray-600 text-gray-300">Monday - Friday: 8:00 AM - 5:00 PM<br />Saturday: 8:00 AM - 12:00 PM</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50 p-8 rounded-xl border border-gray-100">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
+                                <form className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                        <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                        <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                        <textarea rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"></textarea>
+                                    </div>
+                                    <button type="submit" className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg font-medium">
+                                        Send Message
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section className="py-20 bg-gray-50 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-5">
+                        <div className="absolute top-10 right-10 w-32 h-32 bg-blue-600 rounded-full"></div>
+                        <div className="absolute bottom-10 left-10 w-24 h-24 bg-blue-400 rounded-full"></div>
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-blue-300 rounded-full"></div>
+                    </div>
+
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Visit Our Office</h2>
+                            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                                Find us at the Iligan City Hall Complex. We're here to serve you and provide assistance with all senior citizen services.
+                            </p>
+                        </div>
+
+                        <div className="grid lg:grid-cols-3 gap-8">
+                            <div className="lg:col-span-1 space-y-6">
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-gray-900 mb-2">Office Address</h3>
+                                            <p className="text-gray-600 leading-relaxed">
+                                                Iligan City Hall Complex<br />
+                                                Iligan City, Lanao del Norte<br />
+                                                Philippines 9200
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-gray-900 mb-2">Office Hours</h3>
+                                            <p className="text-gray-600 leading-relaxed">
+                                                Monday - Friday: 8:00 AM - 5:00 PM<br />
+                                                Saturday: 8:00 AM - 12:00 PM<br />
+                                                Sunday: Closed
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                                            <svg className="w-12 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-gray-900 mb-2">Getting There</h3>
+                                            <p className="text-gray-600 leading-relaxed">
+                                                Located at the main Iligan City Hall building. Public transportation and parking available nearby.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="lg:col-span-2">
+                                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                                    <div className="p-4 bg-gray-50 border-b border-gray-100">
+                                        <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 8V9m0 0V7m0 2L9 7" />
+                                            </svg>
+                                            OSCA Office Location
+                                        </h3>
+                                    </div>
+                                    <div className="relative h-96 bg-gray-100">
+                                        <iframe
+                                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3970.242!2d124.25173190821492!3d8.225997815576388!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zOMKwMTMnMzMuNiJOIDEyNMKwMTUnMDYuMiJF!5e0!3m2!1sen!2sph!4v1647856384234!5m2!1sen!2sph"
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            className="absolute inset-0"
+                                            title="OSCA Office Location - Iligan City Hall"
+                                        />
+                                    </div>
+
+                                    <div className="p-4 bg-gray-50 border-t border-gray-100">
+                                        <div className="flex flex-wrap items-center justify-between gap-4">
+                                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Exact coordinates: 8°13'33.6"N 124°15'06.2"E
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <a
+                                                    href="https://maps.google.com/?q=8.225997815576388,124.25173190821492"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all text-sm font-medium"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                    </svg>
+                                                    Open in Google Maps
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
