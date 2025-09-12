@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 type SeniorCitizenFormData = Record<string, any> & {
     // Personal Information
@@ -104,6 +105,15 @@ export default function SeniorCitizenRegistration() {
         data_privacy_consent: false,
         terms_conditions: false,
     });
+
+    const { props } = usePage();
+    
+    useEffect(() => {
+        if (props.swal) {
+            // @ts-ignore
+            window.Swal.fire(props.swal);
+        }
+    }, [props.swal]);
 
     const nextStep = () => {
         if (currentStep < steps.length) {
@@ -624,8 +634,13 @@ export default function SeniorCitizenRegistration() {
             
             <div className="min-h-screen bg-gray-50">
                 <Header showFullNav={true} />
-
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+                    {/* Senior Citizen Registration Form Header */}
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-bold text-blue-700 text-center">
+                            Senior Citizen Registration Form
+                        </h2>
+                    </div>
                     {/* Progress Steps */}
                     <div className="mb-8">
                         <div className="flex items-center justify-between -ml-24">
@@ -715,6 +730,7 @@ export default function SeniorCitizenRegistration() {
                         </form>
                     </div>
                 </div>
+                <Footer />
             </div>
         </>
     );

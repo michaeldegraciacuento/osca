@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SeniorCitizenRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -59,7 +60,6 @@ class SeniorCitizenController extends Controller
         // Handle file uploads
         $documentPaths = [];
         $documentFields = ['valid_id_front', 'valid_id_back', 'birth_certificate', 'proof_of_residency'];
-        
         foreach ($documentFields as $field) {
             if ($request->hasFile($field)) {
                 $file = $request->file($field);
@@ -68,9 +68,55 @@ class SeniorCitizenController extends Controller
             }
         }
 
-        // TODO: Save to database
-        // For now, we'll just return a success response
-        
-        return redirect()->back()->with('success', 'Senior Citizen registration submitted successfully! We will review your application and contact you soon.');
+        // Store to database
+        SeniorCitizenRegistration::create([
+            // Personal Information
+            'last_name' => $request->last_name,
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'suffix' => $request->suffix,
+            'date_of_birth' => $request->date_of_birth,
+            'place_of_birth' => $request->place_of_birth,
+            'gender' => $request->gender,
+            'civil_status' => $request->civil_status,
+            // Contact Information
+            'contact_number' => $request->contact_number,
+            'email' => $request->email,
+            // Address Information
+            'house_number' => $request->house_number,
+            'street' => $request->street,
+            'barangay' => $request->barangay,
+            'city' => $request->city,
+            'province' => $request->province,
+            'zip_code' => $request->zip_code,
+            // Emergency Contact
+            'emergency_contact_name' => $request->emergency_contact_name,
+            'emergency_contact_relationship' => $request->emergency_contact_relationship,
+            'emergency_contact_number' => $request->emergency_contact_number,
+            'emergency_contact_address' => $request->emergency_contact_address,
+            // Health Information
+            'has_medical_conditions' => $request->has_medical_conditions,
+            'medical_conditions' => $request->medical_conditions,
+            'current_medications' => $request->current_medications,
+            'allergies' => $request->allergies,
+            // Documents
+            'valid_id_front' => $documentPaths['valid_id_front'] ?? null,
+            'valid_id_back' => $documentPaths['valid_id_back'] ?? null,
+            'birth_certificate' => $documentPaths['birth_certificate'] ?? null,
+            'proof_of_residency' => $documentPaths['proof_of_residency'] ?? null,
+            // Agreements
+            'data_privacy_consent' => $request->data_privacy_consent,
+            'terms_conditions' => $request->terms_conditions,
+        ]);
+
+        // SweetAlert notification via Inertia
+        return redirect()->back()->with([
+            'success' => true,
+            'swal' => [
+                'title' => 'Registration Submitted!',
+                'text' => 'Your Senior Citizen registration has been received. We will review your application and contact you soon.',
+                'icon' => 'success',
+            ]
+        ]);
     }
 }

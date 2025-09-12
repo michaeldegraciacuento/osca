@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
 
         // Create test users with roles
         $admin = User::factory()->create([
-            'name' => 'Michael Cuento',
-            'email' => 'amfufu.michael@gmail.com',
+            'name' => 'administrator',
+            'email' => 'administrator@osca.iligan',
             'password' => 'password',
-            'mfa_enabled' => '1',
+            'mfa_enabled' => '0',
         ]);
         $admin->assignRole('admin');
 
