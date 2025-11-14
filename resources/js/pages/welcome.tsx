@@ -3,10 +3,134 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+    const [registrationId, setRegistrationId] = useState('');
+    const [statusLoading, setStatusLoading] = useState(false);
+    const [statusError, setStatusError] = useState<string | null>(null);
+    const [statusResult, setStatusResult] = useState<any>(null);
+    
+    // Calendar modal state
+    const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+    const [calendarLoading, setCalendarLoading] = useState(false);
+    const [calendarVisits, setCalendarVisits] = useState<any[]>([]);
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+    // Mortuary Aid modal state
+    const [isMortuaryModalOpen, setIsMortuaryModalOpen] = useState(false);
+
+    const checkStatus = async () => {
+        try {
+            setStatusLoading(true);
+            setStatusError(null);
+            setStatusResult(null);
+
+            const id = registrationId.trim();
+            if (!id) {
+                setStatusError('Enter a Registration ID.');
+                return;
+            }
+
+            // Use GET (avoids CSRF token requirement)
+            const res = await fetch(`/senior-citizen/check-status/${encodeURIComponent(id)}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+                credentials: 'same-origin',
+            });
+
+            if (res.status === 404) {
+                setStatusError('Registration ID not found.');
+                return;
+            }
+            if (!res.ok) {
+                setStatusError('Unable to fetch status.');
+                return;
+            }
+
+            const data = await res.json();
+            if (!data.success) {
+                setStatusError(data.message || 'Unable to fetch status.');
+                return;
+            }
+            setStatusResult(data.registration);
+        } catch {
+            setStatusError('Something went wrong. Please try again.');
+        } finally {
+            setStatusLoading(false);
+        }
+    };
+
+    const fetchCalendarVisits = async () => {
+        try {
+            setCalendarLoading(true);
+            const res = await fetch('/api/home-visit-calendar', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+                credentials: 'same-origin',
+            });
+
+            if (!res.ok) {
+                console.error('Failed to fetch calendar visits');
+                return;
+            }
+
+            const data = await res.json();
+            setCalendarVisits(data.visits || []);
+        } catch (error) {
+            console.error('Error fetching calendar visits:', error);
+        } finally {
+            setCalendarLoading(false);
+        }
+    };
+
+    const openCalendarModal = () => {
+        setIsCalendarModalOpen(true);
+        fetchCalendarVisits();
+    };
+
+    const getDaysInMonth = (date: Date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+        
+        return { daysInMonth, startingDayOfWeek, year, month };
+    };
+
+    const hasVisitOnDate = (date: Date) => {
+        const dateStr = date.toISOString().split('T')[0];
+        return calendarVisits.some(visit => visit.scheduled_date === dateStr);
+    };
+
+    const getVisitsForDate = (date: Date) => {
+        const dateStr = date.toISOString().split('T')[0];
+        return calendarVisits.filter(visit => visit.scheduled_date === dateStr);
+    };
+
+    const nextMonth = () => {
+        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+    };
+
+    const prevMonth = () => {
+        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+    };
+
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                        'July', 'August', 'September', 'October', 'November', 'December'];
 
     return (
         <>
@@ -40,7 +164,7 @@ export default function Welcome() {
                             <div
                                 className="w-full h-full min-h-[500px] lg:min-h-[600px] rounded-2xl shadow-xl bg-cover bg-center bg-no-repeat"
                                 style={{
-                                    backgroundImage: 'url(/image/hero-banner.jpg)'
+                                    backgroundImage: 'url(/image/hero.jpg)'
                                 }}
                             >
                             </div>
@@ -92,9 +216,12 @@ export default function Welcome() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
                                     </div>
-                                    <h3 className="text-lg font-bold text-green-900 ">Apply for Benefits</h3>
+                                    <h3 className="text-lg font-bold text-green-900 ">Mortuary Aid</h3>
                                 </div>
-                                <button className="w-full mt-4 px-6 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-bold text-sm group-hover:shadow-lg">
+                                <button 
+                                    onClick={() => setIsMortuaryModalOpen(true)}
+                                    className="w-full mt-4 px-6 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all font-bold text-sm group-hover:shadow-lg"
+                                >
                                     Apply Now
                                 </button>
                             </div>
@@ -108,7 +235,10 @@ export default function Welcome() {
                                     </div>
                                     <h3 className="text-base font-bold text-orange-900">Check Application Status</h3>
                                 </div>
-                                <button className="w-full mt-1 px-6 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all font-bold text-sm group-hover:shadow-lg">
+                                <button
+                                    className="w-full mt-1 px-6 py-4 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all font-bold text-sm group-hover:shadow-lg"
+                                    onClick={() => setIsStatusModalOpen(true)}
+                                >
                                     Check Status
                                 </button>
                             </div>
@@ -120,10 +250,13 @@ export default function Welcome() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                         </svg>
                                     </div>
-                                    <h3 className="text-base font-bold text-purple-900">Request Home Visit</h3>
+                                    <h3 className="text-base font-bold text-purple-900">Home Visit Calendar</h3>
                                 </div>
-                                <button className="w-full px-6 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all font-bold text-sm group-hover:shadow-lg">
-                                    Request Visit
+                                <button 
+                                    className="w-full px-6 py-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all font-bold text-sm group-hover:shadow-lg"
+                                    onClick={openCalendarModal}
+                                >
+                                    Check Visit
                                 </button>
                             </div>
                         </div>
@@ -465,6 +598,510 @@ export default function Welcome() {
                         </div>
                     </div>
                 </section>
+
+                {/* Check Status Modal */}
+                <Dialog open={isStatusModalOpen} onOpenChange={(open) => {
+                    setIsStatusModalOpen(open);
+                    if (!open) {
+                        setRegistrationId('');
+                        setStatusResult(null);
+                        setStatusError(null);
+                        setStatusLoading(false);
+                    }
+                }}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Check Application Status</DialogTitle>
+                            <DialogDescription>Enter your Registration ID to see the current status of your application.</DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="registrationId">Registration ID</Label>
+                                <Input
+                                    id="registrationId"
+                                    placeholder="e.g., OSCA-202510-1147"
+                                    value={registrationId}
+                                    onChange={(e) => setRegistrationId(e.target.value)}
+                                />
+                            </div>
+
+                            {statusError && (
+                                <div className="text-sm text-red-600 bg-red-50 border border-red-200 p-2 rounded">
+                                    {statusError}
+                                </div>
+                            )}
+
+                            {statusResult && (
+                                <div className="rounded-lg border p-3 bg-white">
+                                    <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                                        <div>
+                                            <div className="text-muted-foreground">Registration ID</div>
+                                            <div className="font-medium">{statusResult.id}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground">Name</div>
+                                            <div className="font-medium">{statusResult.name}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground">Status</div>
+                                            <div className="font-medium">{statusResult.status_label || statusResult.status}</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-muted-foreground">Submitted</div>
+                                            <div className="font-medium">{statusResult.submitted_at}</div>
+                                        </div>
+                                        {statusResult.reviewed_at && (
+                                            <div>
+                                                <div className="text-muted-foreground">Reviewed</div>
+                                                <div className="font-medium">{statusResult.reviewed_at}</div>
+                                            </div>
+                                        )}
+                                        {statusResult.notes && (
+                                            <div className="sm:col-span-2">
+                                                <div className="text-muted-foreground">Notes</div>
+                                                <div className="font-medium">{statusResult.notes}</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <DialogFooter className="gap-2">
+                            <Button variant="outline" onClick={() => setIsStatusModalOpen(false)}>Close</Button>
+                            <Button onClick={checkStatus} disabled={statusLoading || !registrationId.trim()}>
+                                {statusLoading ? 'Checking...' : 'Check Status'}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Home Visit Calendar Modal */}
+                <Dialog open={isCalendarModalOpen} onOpenChange={(open) => {
+                    setIsCalendarModalOpen(open);
+                    if (!open) {
+                        setSelectedDate(null);
+                        setCalendarVisits([]);
+                    }
+                }}>
+                    <DialogContent className="max-h-[90vh] overflow-y-auto" style={{ width: '90vw', maxWidth: '900px' }}>
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-bold text-gray-900">Home Visit Calendar</DialogTitle>
+                            <DialogDescription>
+                                View scheduled home visits for senior citizens
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-4">
+                            {calendarLoading ? (
+                                <div className="flex justify-center items-center py-12">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+                                </div>
+                            ) : (
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    {/* Left Column - Calendar */}
+                                    <div className="space-y-4">
+                                        {/* Calendar Header */}
+                                        <div className="flex items-center justify-between mb-4">
+                                            <Button
+                                                variant="outline"
+                                                onClick={prevMonth}
+                                                className="px-4 py-2"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                </svg>
+                                            </Button>
+                                            <h3 className="text-lg font-bold text-gray-900">
+                                                {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                                            </h3>
+                                            <Button
+                                                variant="outline"
+                                                onClick={nextMonth}
+                                                className="px-4 py-2"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </Button>
+                                        </div>
+
+                                        {/* Calendar Grid */}
+                                        <div className="grid grid-cols-7 gap-1">
+                                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                                                <div key={day} className="text-center font-bold text-xs text-gray-600 py-2">
+                                                    {day}
+                                                </div>
+                                            ))}
+                                            
+                                            {(() => {
+                                                const { daysInMonth, startingDayOfWeek, year, month } = getDaysInMonth(currentMonth);
+                                                const days = [];
+                                                
+                                                // Empty cells before first day
+                                                for (let i = 0; i < startingDayOfWeek; i++) {
+                                                    days.push(<div key={`empty-${i}`} className="p-2"></div>);
+                                                }
+                                                
+                                                // Days of the month
+                                                for (let day = 1; day <= daysInMonth; day++) {
+                                                    const date = new Date(year, month, day);
+                                                    const hasVisit = hasVisitOnDate(date);
+                                                    const isSelected = selectedDate?.toDateString() === date.toDateString();
+                                                    const isToday = new Date().toDateString() === date.toDateString();
+                                                    
+                                                    days.push(
+                                                        <button
+                                                            key={day}
+                                                            onClick={() => setSelectedDate(date)}
+                                                            className={`p-2 rounded-lg text-center transition-all text-sm ${
+                                                                isSelected 
+                                                                    ? 'bg-purple-600 text-white font-bold shadow-lg' 
+                                                                    : hasVisit 
+                                                                        ? 'bg-purple-100 text-purple-900 font-semibold hover:bg-purple-200 border-2 border-purple-400' 
+                                                                        : isToday
+                                                                            ? 'bg-gray-100 text-gray-900 font-medium hover:bg-gray-200'
+                                                                            : 'text-gray-700 hover:bg-gray-50'
+                                                            }`}
+                                                        >
+                                                            {day}
+                                                            {hasVisit && !isSelected && (
+                                                                <div className="w-1 h-1 bg-purple-600 rounded-full mx-auto mt-0.5"></div>
+                                                            )}
+                                                        </button>
+                                                    );
+                                                }
+                                                
+                                                return days;
+                                            })()}
+                                        </div>
+                                    </div>
+
+                                    {/* Right Column - Selected Date Details */}
+                                    <div className="space-y-4">
+                                        <div className="sticky top-0">
+                                            {selectedDate ? (
+                                                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200 min-h-[400px]">
+                                                    <h4 className="font-bold text-base text-purple-900 mb-3">
+                                                        {selectedDate.toLocaleDateString('en-US', { 
+                                                            weekday: 'long', 
+                                                            year: 'numeric', 
+                                                            month: 'long', 
+                                                            day: 'numeric' 
+                                                        })}
+                                                    </h4>
+                                                    {(() => {
+                                                        const visits = getVisitsForDate(selectedDate);
+                                                        if (visits.length === 0) {
+                                                            return (
+                                                                <div className="flex flex-col items-center justify-center py-12 text-center">
+                                                                    <svg className="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                    </svg>
+                                                                    <p className="text-gray-500 text-sm font-medium">No visits scheduled</p>
+                                                                    <p className="text-gray-400 text-xs mt-1">This date has no scheduled home visits</p>
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return (
+                                                            <>
+                                                                <p className="text-xs text-purple-700 mb-4 font-medium">
+                                                                    {visits.length} visit{visits.length > 1 ? 's' : ''} scheduled
+                                                                </p>
+                                                                <div className="space-y-3 max-h-[450px] overflow-y-auto pr-2">
+                                                                    {visits.map((visit: any, idx: number) => (
+                                                                        <div key={idx} className="bg-white p-4 rounded-lg shadow-sm border border-purple-100 hover:shadow-md transition-shadow">
+                                                                            <div className="flex items-start justify-between mb-2">
+                                                                                <div className="flex items-center gap-2">
+                                                                                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                                    </svg>
+                                                                                    <p className="font-bold text-gray-900">{visit.time_slot}</p>
+                                                                                </div>
+                                                                                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                                                                    visit.status === 'Scheduled' 
+                                                                                        ? 'bg-blue-100 text-blue-700'
+                                                                                        : visit.status === 'Re-Scheduled'
+                                                                                            ? 'bg-orange-100 text-orange-700'
+                                                                                            : 'bg-green-100 text-green-700'
+                                                                                }`}>
+                                                                                    {visit.status}
+                                                                                </span>
+                                                                            </div>
+                                                                            {(visit.full_name || visit.registration_id) && (
+                                                                                <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-purple-100">
+                                                                                    {visit.full_name && (
+                                                                                        <div className="flex items-center gap-2">
+                                                                                            <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                                                            </svg>
+                                                                                            <span className="text-xs text-gray-700 font-medium truncate">{visit.full_name}</span>
+                                                                                        </div>
+                                                                                    )}
+                                                                                    {visit.registration_id && (
+                                                                                        <div className="flex items-center gap-2">
+                                                                                            <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4m-4-8l4-4m0 0l4 4m-4-4v12" />
+                                                                                            </svg>
+                                                                                            <span className="text-xs text-gray-700 font-mono truncate">{visit.registration_id}</span>
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            ) : (
+                                                <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 min-h-[400px] flex flex-col items-center justify-center text-center">
+                                                    <svg className="w-20 h-20 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <h4 className="font-semibold text-gray-700 mb-2">Select a Date</h4>
+                                                    <p className="text-gray-500 text-sm max-w-xs">
+                                                        Click on a date in the calendar to view scheduled home visits for that day
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {/* Legend */}
+                                        <div className="flex  gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-4 h-4 bg-purple-100 border-2 border-purple-400 rounded"></div>
+                                                <span className="text-xs text-gray-700">Has Scheduled Visits</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-4 h-4 bg-gray-100 rounded"></div>
+                                                <span className="text-xs text-gray-700">Today</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-4 h-4 bg-purple-600 rounded"></div>
+                                                <span className="text-xs text-gray-700">Selected Date</span>
+                                            </div>
+                                        </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setIsCalendarModalOpen(false)}>
+                                Close
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Mortuary Aid Application Process Modal */}
+                <Dialog open={isMortuaryModalOpen} onOpenChange={setIsMortuaryModalOpen}>
+                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-bold text-gray-900">Mortuary Aid Application Process</DialogTitle>
+                            <DialogDescription>
+                                Follow these steps to apply for mortuary assistance for a deceased senior citizen
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-6 py-4">
+                            {/* Step 1 */}
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                        1
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">Apply for Senior Citizen Registration</h3>
+                                    <p className="text-gray-600 mb-3">
+                                        First, the deceased must have been a registered senior citizen. If not yet registered, you need to complete the Senior Citizen Registration form with all required information and documents.
+                                    </p>
+                                    <Link
+                                        href="/senior-citizen/register"
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-medium text-sm"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                        </svg>
+                                        Start Registration
+                                    </Link>
+                                </div>
+                            </div>
+
+                            {/* Step 2 */}
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                        2
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">Wait for Registration Review</h3>
+                                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-3">
+                                        <div className="flex items-start gap-3">
+                                            <svg className="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <div>
+                                                <p className="font-semibold text-orange-900 mb-1">Review Period: Up to 3 Business Days</p>
+                                                <p className="text-sm text-orange-700">
+                                                    Our team will review the registration application. The status will be updated to "Under Review" during this period.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="text-gray-600 text-sm">
+                                        You can check your application status anytime using your Registration ID.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Step 3 */}
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                        3
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">Receive Approval Notification</h3>
+                                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-3">
+                                        <div className="flex items-start gap-3">
+                                            <svg className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                            </svg>
+                                            <div>
+                                                <p className="font-semibold text-green-900 mb-1">Email Notification</p>
+                                                <p className="text-sm text-green-700">
+                                                    Once approved, you will receive an email notification to the registered email address with instructions to proceed with the mortuary aid application.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Step 4 */}
+                            <div className="flex gap-4">
+                                <div className="flex-shrink-0">
+                                    <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                        4
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2">Upload Mortuary Aid Documents</h3>
+                                    <p className="text-gray-600 mb-3">
+                                        After approval, log in to the portal and upload all necessary documents for the mortuary aid application:
+                                    </p>
+                                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                        <p className="font-semibold text-purple-900 mb-3 text-sm">Required Documents:</p>
+                                        <ul className="space-y-2 text-sm text-purple-800">
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>OSCA ID (Original)</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Barangay Residency Certificate</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Barangay Indigency Certificate</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Death Certificate</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Affidavit of Next of Kin</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>OSCA Certificate</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Marriage Contract (if applicable)</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Birth Certificate of Children</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Valid ID of Children</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Valid ID of Claimants</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <svg className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Waiver / Authority to Claim</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <p className="text-sm text-gray-500 mt-3 italic">
+                                        * All documents must be in PDF, JPG, JPEG, or PNG format (max 5MB each)
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Important Note */}
+                            <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                                <div className="flex items-start gap-3">
+                                    <svg className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div>
+                                        <p className="font-semibold text-blue-900 mb-1">Important Note</p>
+                                        <p className="text-sm text-blue-800">
+                                            The mortuary aid application is automatically created once the senior citizen registration is approved. You just need to upload the required documents through the portal after receiving the approval email.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <DialogFooter className="gap-2">
+                            <Button variant="outline" onClick={() => setIsMortuaryModalOpen(false)}>
+                                Close
+                            </Button>
+                            <Link href="/senior-citizen/register">
+                                <Button className="bg-blue-600 hover:bg-blue-700">
+                                    Start Registration Now
+                                </Button>
+                            </Link>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
                 <Footer />
             </div>
         </>

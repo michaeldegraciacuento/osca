@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Swal from 'sweetalert2';
 
 type SeniorCitizenFormData = Record<string, any> & {
     // Personal Information
@@ -60,7 +61,8 @@ const steps = [
 
 export default function SeniorCitizenRegistration() {
     const [currentStep, setCurrentStep] = useState(1);
-    const { data, setData, post, processing, errors, reset } = useForm<SeniorCitizenFormData>({
+    const { props } = usePage();
+    const { data, setData, post, processing, errors, reset, clearErrors } = useForm<SeniorCitizenFormData>({
         // Personal Information
         last_name: '',
         first_name: '',
@@ -106,14 +108,26 @@ export default function SeniorCitizenRegistration() {
         terms_conditions: false,
     });
 
-    const { props } = usePage();
-    
+    // Handle SweetAlert notifications
     useEffect(() => {
         if (props.swal) {
-            // @ts-ignore
-            window.Swal.fire(props.swal);
+            Swal.fire(props.swal).then((result) => {
+                if (result.isConfirmed && props.success) {
+                    // Reset form after successful submission
+                    reset();
+                    setCurrentStep(1);
+                    clearErrors();
+                }
+            });
         }
     }, [props.swal]);
+
+    // Handle success state - reset form to step 1
+    useEffect(() => {
+        if (props.success) {
+            setCurrentStep(1);
+        }
+    }, [props.success]);
 
     const nextStep = () => {
         if (currentStep < steps.length) {
@@ -129,7 +143,52 @@ export default function SeniorCitizenRegistration() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('senior-citizen.store'));
+        
+        // Debug: Log form data
+        console.log('Submitting form data:', {
+            ...data,
+            valid_id_front: data.valid_id_front ? 'File present' : 'Missing',
+            valid_id_back: data.valid_id_back ? 'File present' : 'Missing',
+            birth_certificate: data.birth_certificate ? 'File present' : 'Missing',
+            proof_of_residency: data.proof_of_residency ? 'File present' : 'Missing',
+        });
+        
+        // Show loading alert
+        Swal.fire({
+            title: 'Submitting Registration...',
+            text: 'Please wait while we process your application.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        post(route('senior-citizen.store'), {
+            forceFormData: true, // Force multipart/form-data for file uploads
+            onSuccess: (response) => {
+                Swal.close();
+                console.log('Success response:', response);
+            },
+            onError: (errors) => {
+                Swal.close();
+                console.error('Validation errors:', errors);
+                console.error('All errors:', errors);
+                
+                // Show validation errors in a more readable format
+                if (Object.keys(errors).length > 0) {
+                    const errorList = Object.entries(errors)
+                        .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+                        .join('\n');
+                    alert('Registration failed with validation errors:\n\n' + errorList);
+                } else {
+                    alert('Registration failed. Please check all required fields and try again.');
+                }
+            },
+            onFinish: () => {
+                console.log('Request finished');
+            }
+        });
     };
 
     const handleFileUpload = (field: keyof SeniorCitizenFormData, file: File | null) => {
@@ -285,13 +344,14 @@ export default function SeniorCitizenRegistration() {
                                     {errors.contact_number && <p className="text-red-500 text-sm mt-1">{errors.contact_number}</p>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
                                     <input
                                         type="email"
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
                                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="email@example.com"
+                                        required
                                     />
                                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                                 </div>
@@ -640,10 +700,14 @@ export default function SeniorCitizenRegistration() {
                         <h2 className="text-2xl font-bold text-blue-700 text-center">
                             Senior Citizen Registration Form
                         </h2>
+                        <p className="text-center text-gray-600 mt-2">
+                            Complete all steps to register as a senior citizen in Iligan City
+                        </p>
                     </div>
+
                     {/* Progress Steps */}
                     <div className="mb-8">
-                        <div className="flex items-center justify-between -ml-24">
+                        <div className="flex items-center justify-between">
                             {steps.map((step, index) => (
                                 <div key={step.id} className="flex items-center">
                                     <div className="flex items-center">
@@ -683,6 +747,27 @@ export default function SeniorCitizenRegistration() {
                     {/* Form */}
                     <div className="bg-white shadow rounded-lg">
                         <form onSubmit={handleSubmit} className="p-6">
+                            {/* Global Error Display */}
+                            {Object.keys(errors).length > 0 && (
+                                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                    <div className="flex items-start">
+                                        <svg className="w-5 h-5 text-red-600 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                        </svg>
+                                        <div className="flex-1">
+                                            <h3 className="text-sm font-medium text-red-800 mb-2">Please fix the following errors:</h3>
+                                            <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                                                {Object.entries(errors).map(([field, message]) => (
+                                                    <li key={field}>
+                                                        <strong>{field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> {Array.isArray(message) ? message[0] : message}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            
                             {renderStep()}
                             
                             {/* Navigation Buttons */}

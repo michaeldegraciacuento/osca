@@ -90,7 +90,33 @@ class RolePermissionSeeder extends Seeder
             'users.delete',
             'users.assign_roles',
             'users.reset_password',
+            'users.page',
         ];
+
+        $seniorCitizenRegistrationPermissions = [
+            'senior_citizen_registrations.view',
+            'senior_citizen_registrations.create',
+            'senior_citizen_registrations.edit',
+            'senior_citizen_registrations.delete',
+            'senior_citizen_registrations.page',
+        ];
+
+        $seniorCitizenHomeVisitPermissions = [
+            'senior_citizen_home_visits.view',
+            'senior_citizen_home_visits.create',
+            'senior_citizen_home_visits.edit',
+            'senior_citizen_home_visits.delete',
+            'senior_citizen_home_visits.page',
+        ];
+
+        $seniorCitizenMortuaryApplicationsPermissions = [
+            'senior_citizen_mortuary_applications.view',
+            'senior_citizen_mortuary_applications.create',
+            'senior_citizen_mortuary_applications.edit',
+            'senior_citizen_mortuary_applications.delete',
+            'senior_citizen_mortuary_applications.page',
+        ];
+
 
         // Create permissions for Audit & Compliance
         // $auditPermissions = [
@@ -106,7 +132,9 @@ class RolePermissionSeeder extends Seeder
             'system.settings',
             'system.backup',
             'system.maintenance',
-            'system.logs',
+            'system.roles',
+            'system.dashboards',
+            'system.senior_citizen',
         ];
 
         // Combine all permissions
@@ -119,7 +147,11 @@ class RolePermissionSeeder extends Seeder
             // $reportingPermissions,
             $userPermissions,
             // $auditPermissions,
-            $systemPermissions
+            $systemPermissions,
+            $seniorCitizenRegistrationPermissions,
+            $seniorCitizenHomeVisitPermissions,
+            $seniorCitizenMortuaryApplicationsPermissions
+            
         );
 
         // Create permissions

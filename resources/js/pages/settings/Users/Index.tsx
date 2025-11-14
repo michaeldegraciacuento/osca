@@ -4,9 +4,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { MoreHorizontal, Plus, Users, Edit, Trash2, Eye } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 interface User {
     id: number;
@@ -45,6 +46,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function UsersIndex({ users }: Props) {
     const [deletingUser, setDeletingUser] = useState<number | null>(null);
+    const { props } = usePage<{ swal?: { icon: string; title: string; text: string } }>();
+
+    useEffect(() => {
+        if (props.swal) {
+            Swal.fire(props.swal);
+        }
+    }, [props.swal]);
 
     const handleDelete = (userId: number) => {
         if (confirm('Are you sure you want to delete this user?')) {
