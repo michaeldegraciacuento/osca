@@ -1,11 +1,14 @@
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { Users, FileText, Calendar, CheckCircle, Clock, XCircle, TrendingUp } from 'lucide-react';
+import { Head, Link, usePage, router } from '@inertiajs/react';
+import { Users, FileText, Calendar, CheckCircle, Clock, XCircle, TrendingUp, MessageSquare, Star } from 'lucide-react';
 import { usePermissions } from '@/hooks/usePermissions';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -57,6 +60,42 @@ export default function Dashboard({ stats, userHomeVisits = [] }: Props) {
     const { can } = usePermissions();
     const { auth } = usePage().props as any;
     const [isHomeVisitModalOpen, setIsHomeVisitModalOpen] = useState(false);
+    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+    const [hasSubmittedToday, setHasSubmittedToday] = useState(false);
+    const [rating, setRating] = useState(0);
+    const [category, setCategory] = useState('Service Quality');
+    const [message, setMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    useEffect(() => {
+        if (can('system.senior_citizen')) {
+            // Check if user has submitted feedback today
+            fetch('/my-feedback/check-today')
+                .then(res => res.json())
+                .then(data => setHasSubmittedToday(data.has_submitted_today))
+                .catch(err => console.error('Error checking feedback:', err));
+        }
+    }, []);
+    
+    const handleFeedbackSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        
+        router.post('/my-feedback', {
+            rating,
+            category,
+            message,
+        }, {
+            onSuccess: () => {
+                setIsFeedbackModalOpen(false);
+                setHasSubmittedToday(true);
+                setRating(0);
+                setCategory('Service Quality');
+                setMessage('');
+            },
+            onFinish: () => setIsSubmitting(false),
+        });
+    };
     
     const getStatusColor = (status: string) => {
         switch (status.toLowerCase()) {
@@ -397,6 +436,19 @@ export default function Dashboard({ stats, userHomeVisits = [] }: Props) {
                                                             Mortuary Assistance Applications
                                                         </Link>
                                                     </li>
+                                                    <li 
+                                                        className="flex items-center gap-2 cursor-pointer hover:bg-blue-100 p-2 rounded-lg transition-colors"
+                                                        onClick={() => {
+                                                            if (!hasSubmittedToday) {
+                                                                setIsFeedbackModalOpen(true);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <MessageSquare className="h-4 w-4 text-green-600" />
+                                                        <span className={`${hasSubmittedToday ? 'text-gray-400' : 'text-blue-700 hover:underline'}`}>
+                                                            Provide Feedback {hasSubmittedToday && '(Submitted Today)'}
+                                                        </span>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -462,6 +514,108 @@ export default function Dashboard({ stats, userHomeVisits = [] }: Props) {
                                         </div>
                                     )}
                                 </div>
+                            </DialogContent>
+                        </Dialog>
+
+                        {/* Feedback Modal */}
+                        <Dialog open={isFeedbackModalOpen} onOpenChange={setIsFeedbackModalOpen}>
+                            <DialogContent className="max-w-2xl">
+                                <DialogHeader>
+                                    <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+                                        <MessageSquare className="h-6 w-6 text-blue-600" />
+                                        Share Your Feedback
+                                    </DialogTitle>
+                                </DialogHeader>
+                                <form onSubmit={handleFeedbackSubmit} className="space-y-6 mt-4">
+                                    {/* Rating */}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="rating" className="text-base font-semibold">
+                                            How would you rate our service? <span className="text-red-500">*</span>
+                                        </Label>
+                                        <div className="flex items-center gap-2">
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <button
+                                                    key={star}
+                                                    type="button"
+                                                    onClick={() => setRating(star)}
+                                                    className="focus:outline-none transition-transform hover:scale-110"
+                                                >
+                                                    <Star 
+                                                        className={`h-8 w-8 ${
+                                                            star <= rating 
+                                                                ? 'fill-yellow-400 text-yellow-400' 
+                                                                : 'text-gray-300'
+                                                        }`}
+                                                    />
+                                                </button>
+                                            ))}
+                                            {rating > 0 && (
+                                                <span className="ml-2 text-sm font-medium text-gray-600">
+                                                    {rating} {rating === 1 ? 'star' : 'stars'}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Category */}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="category" className="text-base font-semibold">
+                                            Category <span className="text-red-500">*</span>
+                                        </Label>
+                                        <select
+                                            id="category"
+                                            value={category}
+                                            onChange={(e) => setCategory(e.target.value)}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            required
+                                        >
+                                            <option value="Service Quality">Service Quality</option>
+                                            <option value="Staff Assistance">Staff Assistance</option>
+                                            <option value="Process">Process</option>
+                                            <option value="Facilities">Facilities</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Message */}
+                                    <div className="space-y-2">
+                                        <Label htmlFor="message" className="text-base font-semibold">
+                                            Your Feedback <span className="text-red-500">*</span>
+                                        </Label>
+                                        <Textarea
+                                            id="message"
+                                            value={message}
+                                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
+                                            placeholder="Please share your thoughts, suggestions, or concerns..."
+                                            maxLength={500}
+                                            rows={5}
+                                            required
+                                            className="resize-none"
+                                        />
+                                        <p className="text-xs text-gray-500 text-right">
+                                            {message.length}/500 characters
+                                        </p>
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <div className="flex items-center justify-end gap-3 pt-4 border-t">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => setIsFeedbackModalOpen(false)}
+                                            disabled={isSubmitting}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            type="submit"
+                                            disabled={isSubmitting || rating === 0 || !message.trim()}
+                                            className="bg-blue-600 hover:bg-blue-700"
+                                        >
+                                            {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
+                                        </Button>
+                                    </div>
+                                </form>
                             </DialogContent>
                         </Dialog>
             </div>

@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, FacebookIcon, Folder, LayoutGrid, Shield, Users, Settings, FileText, House, Cuboid } from 'lucide-react';
+import { BookOpen, FacebookIcon, Folder, LayoutGrid, Shield, Users, Settings, FileText, House, Cuboid, MessageSquare } from 'lucide-react';
 import AppLogo from './app-logo';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useMemo } from 'react';
@@ -33,6 +33,12 @@ const mainNavItems: NavItem[] = [
         href: '/admin/senior-citizen-mortuary-applications',
         icon: Cuboid,
         permission: 'senior_citizen_mortuary_applications.page',
+    },
+    {
+        title: 'Feedbacks',
+        href: '/admin/feedback',
+        icon: MessageSquare,
+        permission: 'system.dashboards',
     },
 ];
 

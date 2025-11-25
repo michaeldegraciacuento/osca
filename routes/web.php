@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeniorCitizenController;
 use App\Http\Controllers\SeniorCitizenHomeVisitController;
+use App\Http\Controllers\FeedbackController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -83,6 +84,15 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
         Route::get('/my-mortuary-applications/{application}', [\App\Http\Controllers\SeniorCitizenMortuaryApplicationController::class, 'myApplicationShow'])->name('my-mortuary-applications.show');
         Route::post('/my-mortuary-applications', [\App\Http\Controllers\SeniorCitizenMortuaryApplicationController::class, 'myApplicationStore'])->name('my-mortuary-applications.store');
         Route::post('/my-mortuary-applications/{application}/upload', [\App\Http\Controllers\SeniorCitizenMortuaryApplicationController::class, 'uploadDocument'])->name('my-mortuary-applications.upload');
+        
+        // Feedback Routes
+        Route::post('/my-feedback', [FeedbackController::class, 'store'])->name('my-feedback.store');
+        Route::get('/my-feedback/check-today', [FeedbackController::class, 'checkToday'])->name('my-feedback.check-today');
+    });
+    
+    // Admin Feedback Routes
+    Route::middleware(['permission:system.dashboards'])->group(function () {
+        Route::get('/admin/feedback', [FeedbackController::class, 'index'])->name('admin.feedback.index');
     });
     
     // Role and Permission Management Routes with middleware protection
