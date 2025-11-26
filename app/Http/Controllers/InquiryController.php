@@ -6,9 +6,40 @@ use App\Models\Inquiry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 class InquiryController extends Controller
 {
+    /**
+     * Display a listing of inquiries (Admin).
+     */
+    public function index(Request $request)
+    {
+        $perPage = $request->get('per_page', 15);
+        
+        // Get all inquiries with pagination
+        $inquiries = Inquiry::orderBy('submitted_at', 'desc')
+            ->paginate($perPage);
+        
+        // Calculate statistics
+        $stats = [
+            'total' => Inquiry::count(),
+            'today' => Inquiry::whereDate('submitted_at', Carbon::today('Asia/Manila'))->count(),
+            'this_week' => Inquiry::whereBetween('submitted_at', [
+                Carbon::now('Asia/Manila')->startOfWeek(),
+                Carbon::now('Asia/Manila')->endOfWeek()
+            ])->count(),
+            'this_month' => Inquiry::whereMonth('submitted_at', Carbon::now('Asia/Manila')->month)
+                ->whereYear('submitted_at', Carbon::now('Asia/Manila')->year)
+                ->count(),
+        ];
+        
+        return Inertia::render('admin/inquiries/Index', [
+            'inquiries' => $inquiries,
+            'stats' => $stats,
+        ]);
+    }
+
     /**
      * Store a new inquiry from the contact form.
      * Limit: Once per day per IP address.

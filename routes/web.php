@@ -94,6 +94,7 @@ Route::middleware(['auth', 'verified', 'mfa.login'])->group(function () {
     // Admin Feedback Routes
     Route::middleware(['permission:system.dashboards'])->group(function () {
         Route::get('/admin/feedback', [FeedbackController::class, 'index'])->name('admin.feedback.index');
+        Route::get('/admin/inquiries', [InquiryController::class, 'index'])->name('admin.inquiries.index');
     });
     
     // Role and Permission Management Routes with middleware protection
