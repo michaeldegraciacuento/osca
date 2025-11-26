@@ -17,7 +17,7 @@ class SeniorCitizenHomeVisit extends Model
     ];
 
     protected $casts = [
-        'scheduled_date' => 'date',
+        'scheduled_date' => 'date:Y-m-d',
     ];
 
     public const TIME_SLOTS = ['8-10 AM','10-12 PM','1-2 PM','1-4 PM'];

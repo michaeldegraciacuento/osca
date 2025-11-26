@@ -35,7 +35,7 @@ class SeniorCitizenHomeVisitController extends Controller
                 $registration = $v->registration;
                 return [
                     'id' => $v->id,
-                    'scheduled_date' => $v->scheduled_date?->toDateString(),
+                    'scheduled_date' => $v->scheduled_date?->format('Y-m-d'),
                     'time_slot' => $v->time_slot,
                     'status' => $v->status,
                     'notes' => $v->notes,
@@ -188,7 +188,7 @@ class SeniorCitizenHomeVisitController extends Controller
         return response()->json([
             'visits' => $visits->map(fn($v) => [
                 'id' => $v->id,
-                'scheduled_date' => $v->scheduled_date->toDateString(),
+                'scheduled_date' => $v->scheduled_date->format('Y-m-d'),
                 'time_slot' => $v->time_slot,
                 'status' => $v->status,
                 'registration_id' => $v->registration?->registration_id,
