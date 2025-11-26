@@ -227,7 +227,7 @@ export default function SeniorCitizenRegistration() {
                                     type="text"
                                     value={data.last_name}
                                     onChange={(e) => setData('last_name', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                                     required
                                 />
                                 {errors.last_name && <p className="text-red-500 text-sm mt-1">{errors.last_name}</p>}
@@ -238,7 +238,7 @@ export default function SeniorCitizenRegistration() {
                                     type="text"
                                     value={data.first_name}
                                     onChange={(e) => setData('first_name', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                                     required
                                 />
                                 {errors.first_name && <p className="text-red-500 text-sm mt-1">{errors.first_name}</p>}
@@ -249,7 +249,7 @@ export default function SeniorCitizenRegistration() {
                                     type="text"
                                     value={data.middle_name}
                                     onChange={(e) => setData('middle_name', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                 />
                             </div>
                             <div>
@@ -257,7 +257,7 @@ export default function SeniorCitizenRegistration() {
                                 <select
                                     value={data.suffix}
                                     onChange={(e) => setData('suffix', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                 >
                                     <option value="">Select Suffix</option>
                                     <option value="Jr.">Jr.</option>
@@ -273,7 +273,7 @@ export default function SeniorCitizenRegistration() {
                                     type="date"
                                     value={data.date_of_birth}
                                     onChange={(e) => setData('date_of_birth', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     required
                                 />
                                 {errors.date_of_birth && <p className="text-red-500 text-sm mt-1">{errors.date_of_birth}</p>}
@@ -284,7 +284,7 @@ export default function SeniorCitizenRegistration() {
                                     type="text"
                                     value={data.place_of_birth}
                                     onChange={(e) => setData('place_of_birth', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                 />
                             </div>
                             <div>
@@ -292,7 +292,7 @@ export default function SeniorCitizenRegistration() {
                                 <select
                                     value={data.gender}
                                     onChange={(e) => setData('gender', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     required
                                 >
                                     <option value="">Select Gender</option>
@@ -306,7 +306,7 @@ export default function SeniorCitizenRegistration() {
                                 <select
                                     value={data.civil_status}
                                     onChange={(e) => setData('civil_status', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     required
                                 >
                                     <option value="">Select Civil Status</option>
@@ -337,7 +337,7 @@ export default function SeniorCitizenRegistration() {
                                         type="tel"
                                         value={data.contact_number}
                                         onChange={(e) => setData('contact_number', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                         placeholder="09XXXXXXXXX"
                                         required
                                     />
@@ -349,7 +349,7 @@ export default function SeniorCitizenRegistration() {
                                         type="email"
                                         value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                         placeholder="email@example.com"
                                         required
                                     />
@@ -368,7 +368,7 @@ export default function SeniorCitizenRegistration() {
                                         type="text"
                                         value={data.house_number}
                                         onChange={(e) => setData('house_number', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                         required
                                     />
                                     {errors.house_number && <p className="text-red-500 text-sm mt-1">{errors.house_number}</p>}
@@ -379,7 +379,7 @@ export default function SeniorCitizenRegistration() {
                                         type="text"
                                         value={data.street}
                                         onChange={(e) => setData('street', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                         required
                                     />
                                     {errors.street && <p className="text-red-500 text-sm mt-1">{errors.street}</p>}
@@ -390,7 +390,7 @@ export default function SeniorCitizenRegistration() {
                                         type="text"
                                         value={data.barangay}
                                         onChange={(e) => setData('barangay', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                         required
                                     />
                                     {errors.barangay && <p className="text-red-500 text-sm mt-1">{errors.barangay}</p>}
@@ -401,7 +401,7 @@ export default function SeniorCitizenRegistration() {
                                         type="text"
                                         value={data.city}
                                         onChange={(e) => setData('city', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-gray-900"
                                         readOnly
                                     />
                                 </div>
@@ -411,7 +411,7 @@ export default function SeniorCitizenRegistration() {
                                         type="text"
                                         value={data.province}
                                         onChange={(e) => setData('province', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-gray-900"
                                         readOnly
                                     />
                                 </div>
@@ -421,7 +421,7 @@ export default function SeniorCitizenRegistration() {
                                         type="text"
                                         value={data.zip_code}
                                         onChange={(e) => setData('zip_code', e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 text-gray-900"
                                         readOnly
                                     />
                                 </div>
@@ -441,7 +441,7 @@ export default function SeniorCitizenRegistration() {
                                     type="text"
                                     value={data.emergency_contact_name}
                                     onChange={(e) => setData('emergency_contact_name', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     required
                                 />
                                 {errors.emergency_contact_name && <p className="text-red-500 text-sm mt-1">{errors.emergency_contact_name}</p>}
@@ -451,7 +451,7 @@ export default function SeniorCitizenRegistration() {
                                 <select
                                     value={data.emergency_contact_relationship}
                                     onChange={(e) => setData('emergency_contact_relationship', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     required
                                 >
                                     <option value="">Select Relationship</option>
@@ -472,7 +472,7 @@ export default function SeniorCitizenRegistration() {
                                     type="tel"
                                     value={data.emergency_contact_number}
                                     onChange={(e) => setData('emergency_contact_number', e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     placeholder="09XXXXXXXXX"
                                     required
                                 />
@@ -484,7 +484,7 @@ export default function SeniorCitizenRegistration() {
                                     value={data.emergency_contact_address}
                                     onChange={(e) => setData('emergency_contact_address', e.target.value)}
                                     rows={3}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     placeholder="Complete address of emergency contact"
                                 />
                             </div>
@@ -518,7 +518,7 @@ export default function SeniorCitizenRegistration() {
                                         value={data.medical_conditions}
                                         onChange={(e) => setData('medical_conditions', e.target.value)}
                                         rows={3}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                         placeholder="Please list your medical conditions (e.g., Hypertension, Diabetes, Heart Disease)"
                                     />
                                 </div>
@@ -530,7 +530,7 @@ export default function SeniorCitizenRegistration() {
                                     value={data.current_medications}
                                     onChange={(e) => setData('current_medications', e.target.value)}
                                     rows={3}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     placeholder="List any medications you are currently taking (optional)"
                                 />
                             </div>
@@ -541,7 +541,7 @@ export default function SeniorCitizenRegistration() {
                                     value={data.allergies}
                                     onChange={(e) => setData('allergies', e.target.value)}
                                     rows={2}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     placeholder="List any known allergies (food, medication, etc.)"
                                 />
                             </div>
@@ -562,7 +562,7 @@ export default function SeniorCitizenRegistration() {
                                     type="file"
                                     accept="image/*,.pdf"
                                     onChange={(e) => handleFileUpload('valid_id_front', e.target.files?.[0] || null)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     required
                                 />
                                 <p className="text-xs text-gray-500 mt-1">Accepted: Driver's License, PhilHealth ID, Senior Citizen ID, etc.</p>
@@ -575,7 +575,7 @@ export default function SeniorCitizenRegistration() {
                                     type="file"
                                     accept="image/*,.pdf"
                                     onChange={(e) => handleFileUpload('valid_id_back', e.target.files?.[0] || null)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                     required
                                 />
                                 {errors.valid_id_back && <p className="text-red-500 text-sm mt-1">{errors.valid_id_back}</p>}
@@ -587,7 +587,7 @@ export default function SeniorCitizenRegistration() {
                                     type="file"
                                     accept="image/*,.pdf"
                                     onChange={(e) => handleFileUpload('birth_certificate', e.target.files?.[0] || null)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                 />
                                 <p className="text-xs text-gray-500 mt-1">PSA Birth Certificate (recommended)</p>
                             </div>
@@ -598,7 +598,7 @@ export default function SeniorCitizenRegistration() {
                                     type="file"
                                     accept="image/*,.pdf"
                                     onChange={(e) => handleFileUpload('proof_of_residency', e.target.files?.[0] || null)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
                                 />
                                 <p className="text-xs text-gray-500 mt-1">Barangay Certificate, Utility Bill, etc.</p>
                             </div>
@@ -692,7 +692,7 @@ export default function SeniorCitizenRegistration() {
         <>
             <Head title="Senior Citizen Registration - OSCA Iligan City" />
             
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50 ">
                 <Header showFullNav={true} />
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
                     {/* Senior Citizen Registration Form Header */}
@@ -706,7 +706,7 @@ export default function SeniorCitizenRegistration() {
                     </div>
 
                     {/* Progress Steps */}
-                    <div className="mb-8">
+                    <div className="mb-8 text-black">
                         <div className="flex items-center justify-between">
                             {steps.map((step, index) => (
                                 <div key={step.id} className="flex items-center">
