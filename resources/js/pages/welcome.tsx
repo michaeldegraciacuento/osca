@@ -2,11 +2,12 @@ import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
@@ -26,6 +27,73 @@ export default function Welcome() {
 
     // Mortuary Aid modal state
     const [isMortuaryModalOpen, setIsMortuaryModalOpen] = useState(false);
+
+    // Contact form state
+    const [contactForm, setContactForm] = useState({
+        name: '',
+        email: '',
+        message: '',
+    });
+    const [contactLoading, setContactLoading] = useState(false);
+    const [contactError, setContactError] = useState<string | null>(null);
+    const [contactSuccess, setContactSuccess] = useState<string | null>(null);
+    const [canSubmitInquiry, setCanSubmitInquiry] = useState(true);
+
+    // Check if user can submit inquiry on component mount
+    useEffect(() => {
+        checkInquiryStatus();
+    }, []);
+
+    const checkInquiryStatus = async () => {
+        try {
+            const response = await axios.get('/inquiries/check-today');
+            setCanSubmitInquiry(response.data.can_submit);
+            if (!response.data.can_submit) {
+                setContactError(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error checking inquiry status:', error);
+        }
+    };
+
+    const handleContactSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!canSubmitInquiry) {
+            setContactError('You have already submitted an inquiry today.');
+            return;
+        }
+
+        setContactLoading(true);
+        setContactError(null);
+        setContactSuccess(null);
+
+        try {
+            const response = await axios.post('/inquiries/submit', contactForm);
+            
+            if (response.data.success) {
+                setContactSuccess(response.data.message);
+                setContactForm({ name: '', email: '', message: '' });
+                setCanSubmitInquiry(false);
+                
+                // Clear success message after 5 seconds
+                setTimeout(() => {
+                    setContactSuccess(null);
+                }, 5000);
+            }
+        } catch (error: any) {
+            if (error.response?.status === 429) {
+                setContactError(error.response.data.message);
+                setCanSubmitInquiry(false);
+            } else if (error.response?.data?.message) {
+                setContactError(error.response.data.message);
+            } else {
+                setContactError('Something went wrong. Please try again later.');
+            }
+        } finally {
+            setContactLoading(false);
+        }
+    };
 
     const checkStatus = async () => {
         try {
@@ -463,22 +531,75 @@ export default function Welcome() {
 
                             <div className="bg-gray-50 p-8 rounded-xl border border-gray-100">
                                 <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
-                                <form className="space-y-4">
+                                
+                                {contactSuccess && (
+                                    <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                        <div className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <p className="text-sm text-green-800">{contactSuccess}</p>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {contactError && (
+                                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                        <div className="flex items-start gap-3">
+                                            <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <p className="text-sm text-red-800">{contactError}</p>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                <form className="space-y-4" onSubmit={handleContactSubmit}>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                                        <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900" />
+                                        <input 
+                                            type="text" 
+                                            value={contactForm.name}
+                                            onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                                            disabled={!canSubmitInquiry || contactLoading}
+                                            required
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                        <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900" />
+                                        <input 
+                                            type="email" 
+                                            value={contactForm.email}
+                                            onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                                            disabled={!canSubmitInquiry || contactLoading}
+                                            required
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                        <textarea rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"></textarea>
+                                        <textarea 
+                                            rows={4} 
+                                            value={contactForm.message}
+                                            onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                                            disabled={!canSubmitInquiry || contactLoading}
+                                            required
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        ></textarea>
                                     </div>
-                                    <button type="submit" className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg font-medium">
-                                        Send Message
+                                    <button 
+                                        type="submit" 
+                                        disabled={!canSubmitInquiry || contactLoading}
+                                        className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
+                                    >
+                                        {contactLoading ? 'Sending...' : 'Send Message'}
                                     </button>
+                                    {!canSubmitInquiry && !contactError && (
+                                        <p className="text-sm text-gray-500 text-center">
+                                            You can submit one inquiry per day
+                                        </p>
+                                    )}
                                 </form>
                             </div>
                         </div>

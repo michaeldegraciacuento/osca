@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeniorCitizenController;
 use App\Http\Controllers\SeniorCitizenHomeVisitController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\InquiryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -177,6 +178,10 @@ Route::get('/senior-citizen/check-status/{registrationId}', [SeniorCitizenContro
 
 // Public API for home visit calendar
 Route::get('/api/home-visit-calendar', [SeniorCitizenHomeVisitController::class, 'getCalendar'])->name('api.home-visit-calendar');
+
+// Inquiry Routes (Contact Form)
+Route::post('/inquiries/submit', [InquiryController::class, 'store'])->name('inquiries.submit');
+Route::get('/inquiries/check-today', [InquiryController::class, 'checkToday'])->name('inquiries.check-today');
 
 // Admin routes for managing registrations (protected by auth middleware)
 Route::middleware(['auth', 'verified'])->group(function () {
