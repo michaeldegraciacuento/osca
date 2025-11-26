@@ -81,11 +81,11 @@ export default function Header({ showFullNav = true, title, subtitle }: HeaderPr
                 {showFullNav && isMenuOpen && (
                     <div className="md:hidden py-4 border-t border-gray-100">
                         <div className="flex flex-col space-y-3">
-                            <a href="#home" className="text-gray-700 hover:text-blue-600 font-medium">Home</a>
-                            <a href="#about" className="text-gray-700 hover:text-blue-600 font-medium">About</a>
-                            <a href="#services" className="text-gray-700 hover:text-blue-600 font-medium">Services</a>
-                            <a href="#contact" className="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
-                            <a href="#blog" className="text-gray-700 hover:text-blue-600 font-medium">News</a>
+                            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium">About</a>
+                            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium">Services</a>
+                            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
+                            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium">News</a>
                             {auth.user ? (
                                 <Link href={route('dashboard')} className="text-blue-600 font-medium">Dashboard</Link>
                             ) : (

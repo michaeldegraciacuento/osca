@@ -146,8 +146,9 @@ export default function Welcome() {
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700" rel="stylesheet" />
                 <meta name="description" content="Office of the Senior Citizen's Affairs - LGU Iligan City. Serving our senior citizens with care, support, and comprehensive services." />
+                <meta name="color-scheme" content="light" />
             </Head>
-            <div className="min-h-screen bg-white">
+            <div className="min-h-screen bg-white text-gray-900">
                 <Header showFullNav={true} />
                 <section id="home" className="pt-16 min-h-screen flex items-center relative overflow-hidden bg-gray-50">
                     <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -465,15 +466,15 @@ export default function Welcome() {
                                 <form className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                                        <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
+                                        <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                        <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" />
+                                        <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                        <textarea rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"></textarea>
+                                        <textarea rows={4} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"></textarea>
                                     </div>
                                     <button type="submit" className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-lg font-medium">
                                         Send Message
@@ -617,7 +618,7 @@ export default function Welcome() {
                         setStatusLoading(false);
                     }
                 }}>
-                    <DialogContent>
+                    <DialogContent className="bg-white text-gray-900">
                         <DialogHeader>
                             <DialogTitle>Check Application Status</DialogTitle>
                             <DialogDescription>Enter your Registration ID to see the current status of your application.</DialogDescription>
@@ -693,7 +694,7 @@ export default function Welcome() {
                         setCalendarVisits([]);
                     }
                 }}>
-                    <DialogContent className="max-h-[90vh] overflow-y-auto" style={{ width: '90vw', maxWidth: '900px' }}>
+                    <DialogContent className="max-h-[90vh] overflow-y-auto bg-white text-gray-900" style={{ width: '90vw', maxWidth: '900px' }}>
                         <DialogHeader>
                             <DialogTitle className="text-2xl font-bold text-gray-900">Home Visit Calendar</DialogTitle>
                             <DialogDescription>
@@ -906,7 +907,7 @@ export default function Welcome() {
 
                 {/* Mortuary Aid Application Process Modal */}
                 <Dialog open={isMortuaryModalOpen} onOpenChange={setIsMortuaryModalOpen}>
-                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white text-gray-900">
                         <DialogHeader>
                             <DialogTitle className="text-2xl font-bold text-gray-900">Mortuary Aid Application Process</DialogTitle>
                             <DialogDescription>
