@@ -40,7 +40,7 @@
                 <p><strong>Date Approved:</strong> {{ now()->format('F d, Y') }}</p>
             </div>
             
-            <h3>What's Next?</h3>
+            <!-- <h3>What's Next?</h3>
             <ol>
                 <li><strong>Visit our office</strong> to claim your Senior Citizen ID card</li>
                 <li><strong>Bring the following documents:</strong>
@@ -50,7 +50,7 @@
                     </ul>
                 </li>
                 <li><strong>Office Hours:</strong> Monday to Friday, 8:00 AM - 5:00 PM</li>
-            </ol>
+            </ol> -->
             
             <div class="info-box">
                 <h3>OSCA Office Location</h3>
